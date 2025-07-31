@@ -23,7 +23,8 @@
     "test-xmly": "ts-node -T ./plugins/xmly/index.ts",
     "test-suno": "ts-node -T ./plugins/suno/index.ts",
     "test-udio": "ts-node -T ./plugins/udio/index.ts",
-    "test-wxmp3": "ts-node -T ./plugins/wxmp3/index.ts"
+    "test-wxmp3": "ts-node -T ./plugins/wxmp3/index.ts",
+    "test-gdstudio": "ts-node -T ./test/gdstudio.ts"
   },
   "keywords": [],
   "author": {
@@ -35,6 +36,7 @@
     "@react-native-cookies/cookies": "^6.2.1",
     "@types/crypto-js": "^4.1.1",
     "@types/he": "^1.1.2",
+    "@types/node": "^24.1.0",
     "axios": "^0.27.2",
     "big-integer": "^1.6.51",
     "cheerio": "^1.0.0-rc.12",
