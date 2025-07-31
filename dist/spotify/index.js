@@ -26,7 +26,7 @@ const MusicSourceEnum = {
     XIMALAYA: { value: "ximalaya", label: "喜马拉雅" },
     APPLE: { value: "apple", label: "Apple" },
 };
-const currentSource = MusicSourceEnum.NETEASE;
+const currentSource = MusicSourceEnum.SPOTIFY;
 const mediaType = "music";
 function formatMusicItem(item) {
     return {

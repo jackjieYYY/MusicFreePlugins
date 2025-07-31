@@ -11,22 +11,21 @@ var BitrateEnum;
     BitrateEnum["HIGH"] = "740";
     BitrateEnum["SUPER"] = "999";
 })(BitrateEnum || (BitrateEnum = {}));
-var MusicSourceEnum;
-(function (MusicSourceEnum) {
-    MusicSourceEnum["NETEASE"] = "netease";
-    MusicSourceEnum["TENCENT"] = "tencent";
-    MusicSourceEnum["TIDAL"] = "tidal";
-    MusicSourceEnum["SPOTIFY"] = "spotify";
-    MusicSourceEnum["YTMUSIC"] = "ytmusic";
-    MusicSourceEnum["QOBUZ"] = "qobuz";
-    MusicSourceEnum["JOOX"] = "joox";
-    MusicSourceEnum["DEEZER"] = "deezer";
-    MusicSourceEnum["MIGU"] = "migu";
-    MusicSourceEnum["KUGOU"] = "kugou";
-    MusicSourceEnum["KUWO"] = "kuwo";
-    MusicSourceEnum["XIMALAYA"] = "ximalaya";
-    MusicSourceEnum["APPLE"] = "apple";
-})(MusicSourceEnum || (MusicSourceEnum = {}));
+const MusicSourceEnum = {
+    NETEASE: { value: "netease", label: "网易云" },
+    TENCENT: { value: "tencent", label: "腾讯" },
+    TIDAL: { value: "tidal", label: "Tidal" },
+    SPOTIFY: { value: "spotify", label: "Spotify" },
+    YTMUSIC: { value: "ytmusic", label: "YouTube" },
+    QOBUZ: { value: "qobuz", label: "Qobuz" },
+    JOOX: { value: "joox", label: "JOOX" },
+    DEEZER: { value: "deezer", label: "Deezer" },
+    MIGU: { value: "migu", label: "咪咕" },
+    KUGOU: { value: "kugou", label: "酷狗" },
+    KUWO: { value: "kuwo", label: "酷我" },
+    XIMALAYA: { value: "ximalaya", label: "喜马拉雅" },
+    APPLE: { value: "apple", label: "Apple" },
+};
 const currentSource = MusicSourceEnum.TENCENT;
 const mediaType = "music";
 function formatMusicItem(item) {
@@ -74,7 +73,7 @@ async function searchMusicWithSource(query, page, source = "netease") {
     }
 }
 async function searchMusic(query, page) {
-    let results = await searchMusicWithSource(query, page, currentSource);
+    let results = await searchMusicWithSource(query, page, currentSource.value);
     return {
         isEnd: results.length < pageSize,
         data: results,
@@ -193,13 +192,13 @@ async function getLyric(musicItem) {
 }
 exports.getLyric = getLyric;
 module.exports = {
-    platform: "腾讯",
+    platform: currentSource.label,
     author: "欧皇大佬",
     version: "0.1.0",
     supportedSearchType: ["music"],
     primaryKey: ["id", "source"],
     supportedQuality: ["low", "standard", "high", "super"],
-    srcUrl: "https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/tencent/index.js",
+    srcUrl: `https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/${currentSource.value}/index.js`,
     cacheControl: "no-cache",
     search,
     getMediaSource,
