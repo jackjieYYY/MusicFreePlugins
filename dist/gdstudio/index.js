@@ -4,28 +4,44 @@ exports.getLyric = exports.getMediaSource = exports.search = void 0;
 const axios_1 = require("axios");
 const pageSize = 20;
 const baseURL = "https://music-api.gdstudio.xyz/api.php";
-const musicSources = [
-    "netease",
-    "tencent",
-    "kugou",
-    "kuwo",
-    "migu",
-    "spotify",
-    "apple",
-    "deezer",
-    "ytmusic",
-];
+var BitrateEnum;
+(function (BitrateEnum) {
+    BitrateEnum["LOW"] = "192";
+    BitrateEnum["STANDARD"] = "320";
+    BitrateEnum["HIGH"] = "740";
+    BitrateEnum["SUPER"] = "999";
+})(BitrateEnum || (BitrateEnum = {}));
+var MusicSourceEnum;
+(function (MusicSourceEnum) {
+    MusicSourceEnum["NETEASE"] = "netease";
+    MusicSourceEnum["TENCENT"] = "tencent";
+    MusicSourceEnum["TIDAL"] = "tidal";
+    MusicSourceEnum["SPOTIFY"] = "spotify";
+    MusicSourceEnum["YTMUSIC"] = "ytmusic";
+    MusicSourceEnum["QOBUZ"] = "qobuz";
+    MusicSourceEnum["JOOX"] = "joox";
+    MusicSourceEnum["DEEZER"] = "deezer";
+    MusicSourceEnum["MIGU"] = "migu";
+    MusicSourceEnum["KUGOU"] = "kugou";
+    MusicSourceEnum["KUWO"] = "kuwo";
+    MusicSourceEnum["XIMALAYA"] = "ximalaya";
+    MusicSourceEnum["APPLE"] = "apple";
+})(MusicSourceEnum || (MusicSourceEnum = {}));
+const currentSource = MusicSourceEnum.NETEASE;
+const mediaType = "music";
 function formatMusicItem(item) {
     return {
         id: item.id,
         title: item.name,
         artist: Array.isArray(item.artist)
             ? item.artist.join(", ")
-            : typeof item.artist === 'string'
+            : typeof item.artist === "string"
                 ? item.artist
                 : "",
         album: item.album,
-        artwork: item.pic_id ? `${baseURL}?types=pic&source=${item.source}&id=${item.pic_id}&size=500` : undefined,
+        artwork: item.pic_id
+            ? `${baseURL}?types=pic&source=${item.source}&id=${item.pic_id}&size=500`
+            : undefined,
         source: item.source,
         picId: item.pic_id,
         lyricId: item.lyric_id,
@@ -58,22 +74,14 @@ async function searchMusicWithSource(query, page, source = "netease") {
     }
 }
 async function searchMusic(query, page) {
-    let results = await searchMusicWithSource(query, page, "netease");
-    if (results.length === 0 && page === 1) {
-        for (const source of ["tencent", "kugou", "kuwo"]) {
-            results = await searchMusicWithSource(query, page, source);
-            if (results.length > 0) {
-                break;
-            }
-        }
-    }
+    let results = await searchMusicWithSource(query, page, currentSource);
     return {
         isEnd: results.length < pageSize,
         data: results,
     };
 }
 async function search(query, page, type) {
-    if (type === "music") {
+    if (type === mediaType) {
         return await searchMusic(query, page);
     }
     return {
@@ -84,30 +92,27 @@ async function search(query, page, type) {
 exports.search = search;
 async function getMediaSource(musicItem, quality) {
     try {
-        let br = "320";
+        let br = BitrateEnum.HIGH;
         switch (quality) {
             case "low":
-                br = "128";
+                br = BitrateEnum.LOW;
                 break;
             case "standard":
-                br = "192";
+                br = BitrateEnum.STANDARD;
                 break;
             case "high":
-                br = "320";
+                br = BitrateEnum.HIGH;
                 break;
             case "super":
-                br = "740";
-                break;
-            case "lossless":
-                br = "999";
+                br = BitrateEnum.SUPER;
                 break;
             default:
-                br = "320";
+                br = BitrateEnum.HIGH;
         }
         const response = await axios_1.default.get(baseURL, {
             params: {
                 types: "url",
-                source: musicItem.source || "netease",
+                source: musicItem.source,
                 id: musicItem.id,
                 br: br,
             },
@@ -124,9 +129,13 @@ async function getMediaSource(musicItem, quality) {
                 size: data.size,
             };
         }
-        if (br !== "128") {
+        if (br !== BitrateEnum.LOW) {
             console.log(`音质 ${br} 获取失败，尝试降低音质重试`);
-            const fallbackBr = br === "999" ? "740" : br === "740" ? "320" : "128";
+            const fallbackBr = br === BitrateEnum.SUPER
+                ? BitrateEnum.HIGH
+                : br === BitrateEnum.HIGH
+                    ? BitrateEnum.STANDARD
+                    : BitrateEnum.LOW;
             const fallbackResponse = await axios_1.default.get(baseURL, {
                 params: {
                     types: "url",
@@ -161,7 +170,7 @@ async function getLyric(musicItem) {
         const response = await axios_1.default.get(baseURL, {
             params: {
                 types: "lyric",
-                source: musicItem.source || "netease",
+                source: musicItem.source,
                 id: musicItem.lyricId || musicItem.id,
             },
             headers: {
@@ -185,11 +194,11 @@ async function getLyric(musicItem) {
 exports.getLyric = getLyric;
 module.exports = {
     platform: "GDStudio音乐",
-    author: "猫头猫",
+    author: "欧皇大佬",
     version: "0.1.0",
     supportedSearchType: ["music"],
     primaryKey: ["id", "source"],
-    supportedQuality: ["low", "standard", "high", "super", "lossless"],
+    supportedQuality: ["low", "standard", "high", "super"],
     srcUrl: "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/gdstudio/index.js",
     cacheControl: "no-cache",
     search,
