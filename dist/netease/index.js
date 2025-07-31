@@ -218,7 +218,7 @@ var plugin = createMusicPlugin({
   currentSource: "netease" /* NETEASE */,
   platformName: "网易云",
   version: "0.1.0",
-  srcUrl: "https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/gdstudio/index.js"
+  srcUrl: "https://github.com/jackjieYYY/MusicFreePlugins/blob/master/dist/netease/index.js"
 });
 var { search, getMediaSource, getLyric } = plugin;
 var index_default = plugin.pluginConfig;

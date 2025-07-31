@@ -218,7 +218,7 @@ var plugin = createMusicPlugin({
   currentSource: "tencent" /* TENCENT */,
   platformName: "腾讯",
   version: "0.1.0",
-  srcUrl: "https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/gdstudio/index.js"
+  srcUrl: "https://github.com/jackjieYYY/MusicFreePlugins/blob/master/dist/tencent/index.js"
 });
 var { search, getMediaSource, getLyric } = plugin;
 var index_default = plugin.pluginConfig;

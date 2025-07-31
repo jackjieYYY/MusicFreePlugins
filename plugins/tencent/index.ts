@@ -5,7 +5,7 @@ const plugin = createMusicPlugin({
   platformName: "腾讯",
   version: "0.1.0",
   srcUrl:
-    "https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/gdstudio/index.js",
+    "https://github.com/jackjieYYY/MusicFreePlugins/blob/master/dist/tencent/index.js",
 });
 
 export const { search, getMediaSource, getLyric } = plugin;
