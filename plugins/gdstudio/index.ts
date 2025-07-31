@@ -3,18 +3,35 @@ import axios from "axios";
 const pageSize = 20;
 const baseURL = "https://music-api.gdstudio.xyz/api.php";
 
-// 支持的音乐源列表
-const musicSources = [
-  "netease", // 网易云音乐（默认）
-  "tencent", // 腾讯音乐
-  "kugou", // 酷狗音乐
-  "kuwo", // 酷我音乐
-  "migu", // 咪咕音乐
-  "spotify", // Spotify
-  "apple", // Apple Music
-  "deezer", // Deezer
-  "ytmusic", // YouTube Music
-];
+// 音质枚举
+enum BitrateEnum {
+  LOW = "192",
+  STANDARD = "320",
+  HIGH = "740",
+  SUPER = "999",
+}
+
+// 音乐源枚举
+// netease（默认）、tencent、tidal、spotify、ytmusic、qobuz、joox、deezer、migu、kugou、kuwo、ximalaya、apple
+enum MusicSourceEnum {
+  NETEASE = "netease", // 网易云音乐（默认）
+  TENCENT = "tencent", // 腾讯音乐
+  TIDAL = "tidal", // Tidal
+  SPOTIFY = "spotify", // Spotify
+  YTMUSIC = "ytmusic", // YouTube Music
+  QOBUZ = "qobuz", // Qobuz
+  JOOX = "joox", // JOOX
+  DEEZER = "deezer", // Deezer
+  MIGU = "migu", // 咪咕音乐
+  KUGOU = "kugou", // 酷狗音乐
+  KUWO = "kuwo", // 酷我音乐
+  XIMALAYA = "ximalaya", // 喜马拉雅
+  APPLE = "apple", // Apple Music
+}
+
+const currentSource = MusicSourceEnum.NETEASE; // 当前使用的音乐源
+
+const mediaType = "music"; // 媒体类型
 
 function formatMusicItem(item) {
   return {
@@ -66,19 +83,7 @@ async function searchMusicWithSource(query, page, source = "netease") {
 }
 
 async function searchMusic(query, page) {
-  // 优先使用网易云音乐，如果失败则尝试其他音乐源
-  let results = await searchMusicWithSource(query, page, "netease");
-
-  // 如果网易云没有结果，尝试其他音乐源
-  if (results.length === 0 && page === 1) {
-    for (const source of ["tencent", "kugou", "kuwo"]) {
-      results = await searchMusicWithSource(query, page, source);
-      if (results.length > 0) {
-        break;
-      }
-    }
-  }
-
+  let results = await searchMusicWithSource(query, page, currentSource);
   return {
     isEnd: results.length < pageSize,
     data: results,
@@ -86,7 +91,7 @@ async function searchMusic(query, page) {
 }
 
 export async function search(query, page, type) {
-  if (type === "music") {
+  if (type === mediaType) {
     return await searchMusic(query, page);
   }
 
@@ -98,33 +103,30 @@ export async function search(query, page, type) {
 
 export async function getMediaSource(musicItem, quality) {
   try {
-    let br = "320"; // 默认320k音质
+    let br = BitrateEnum.HIGH; // 默认740k音质
 
     // 根据质量参数选择音质
     switch (quality) {
       case "low":
-        br = "128";
+        br = BitrateEnum.LOW;
         break;
       case "standard":
-        br = "192";
+        br = BitrateEnum.STANDARD;
         break;
       case "high":
-        br = "320";
+        br = BitrateEnum.HIGH;
         break;
       case "super":
-        br = "740";
-        break;
-      case "lossless":
-        br = "999";
+        br = BitrateEnum.SUPER;
         break;
       default:
-        br = "320";
+        br = BitrateEnum.HIGH;
     }
 
     const response = await axios.get(baseURL, {
       params: {
         types: "url",
-        source: musicItem.source || "netease",
+        source: musicItem.source,
         id: musicItem.id,
         br: br,
       },
@@ -146,9 +148,14 @@ export async function getMediaSource(musicItem, quality) {
     }
 
     // 如果获取失败，尝试降低音质重试
-    if (br !== "128") {
+    if (br !== BitrateEnum.LOW) {
       console.log(`音质 ${br} 获取失败，尝试降低音质重试`);
-      const fallbackBr = br === "999" ? "740" : br === "740" ? "320" : "128";
+      const fallbackBr =
+        br === BitrateEnum.SUPER
+          ? BitrateEnum.HIGH
+          : br === BitrateEnum.HIGH
+          ? BitrateEnum.STANDARD
+          : BitrateEnum.LOW;
 
       const fallbackResponse = await axios.get(baseURL, {
         params: {
@@ -186,7 +193,7 @@ export async function getLyric(musicItem) {
     const response = await axios.get(baseURL, {
       params: {
         types: "lyric",
-        source: musicItem.source || "netease",
+        source: musicItem.source,
         id: musicItem.lyricId || musicItem.id,
       },
       headers: {
@@ -212,11 +219,11 @@ export async function getLyric(musicItem) {
 
 module.exports = {
   platform: "GDStudio音乐",
-  author: "猫头猫",
+  author: "欧皇大佬",
   version: "0.1.0",
   supportedSearchType: ["music"],
   primaryKey: ["id", "source"], // 添加主键标识
-  supportedQuality: ["low", "standard", "high", "super", "lossless"], // 支持的音质
+  supportedQuality: ["low", "standard", "high", "super"], // 支持的音质
   srcUrl:
     "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/gdstudio/index.js",
   cacheControl: "no-cache",
