@@ -20,11 +20,11 @@ async function run() {
                 const targetPluginPath = path.resolve(basePath, bundleFolder, 'index.js');
                 await fs.stat(targetPluginPath);
                 const origin = await fs.readFile(targetPluginPath, 'utf-8');
-                const mexports = origin.match(/exports.createMusicPlugin\s*=\s*([\s\S]*)$/)[1];
-                const platform = mexports.match(/platformName:\s*['"`](.*)['"`]/)[1]
+                const mexports = origin.match(/module.exports\s*=\s*([\s\S]*)$/)[0];
+                const platform = mexports.match(/platform:\s*['"`](.*)['"`]/)[1]
                 const version = mexports.match(/version:\s*['"`](.*)['"`]/)?.[1]
                 const srcUrl = mexports.match(/srcUrl:\s*['"`](.*)['"`]/)?.[1]
-                
+
                 output.plugins.push({
                     name: platform,
                     url: srcUrl,
