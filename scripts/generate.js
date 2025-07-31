@@ -21,10 +21,10 @@ async function run() {
                 await fs.stat(targetPluginPath);
                 const origin = await fs.readFile(targetPluginPath, 'utf-8');
                 const mexports = origin.match(/module.exports\s*=\s*([\s\S]*)$/)[1];
-                const platform = mexports.match(/platformName:\s*['"`](.*)['"`]/)[0]
+                const platform = mexports.match(/platform:\s*['"`](.*)['"`]/)[1]
                 const version = mexports.match(/version:\s*['"`](.*)['"`]/)?.[1]
                 const srcUrl = mexports.match(/srcUrl:\s*['"`](.*)['"`]/)?.[1]
-                console.log(`正在处理插件: ${platform} (${srcUrl})`);
+
                 output.plugins.push({
                     name: platform,
                     url: srcUrl,

@@ -1,6 +1,24 @@
-const esbuild = require('esbuild');
+const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+
+async function runTscCommand(args) {
+  return new Promise((resolve, reject) => {
+    const tsc = spawn('tsc', args, { stdio: 'inherit' });
+    
+    tsc.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`tsc exited with code ${code}`));
+      }
+    });
+    
+    tsc.on('error', (error) => {
+      reject(error);
+    });
+  });
+}
 
 async function buildAllPlugins() {
   const pluginsDir = './plugins';
@@ -46,23 +64,27 @@ async function buildAllPlugins() {
     }
 
     try {
-      await esbuild.build({
-        entryPoints: [plugin.entryPoint],
-        bundle: true,
-        outfile: path.join(outDir, 'index.js'),
-        platform: 'node',
-        target: 'node18',
-        format: 'cjs',
-        external: ['axios'],
-        minify: false,
-        sourcemap: false,
-        tsconfig: './tsconfig.json',
-        charset: 'utf8',
-      });
+      console.log(`🔨 正在构建 ${plugin.name}...`);
+      
+      // 使用 tsc 编译单个文件
+      await runTscCommand([
+        plugin.entryPoint,
+        '--noImplicitAny', 'false',
+        '--noEmitOnError', 'true',
+        '--removeComments', 'true',
+        '--allowJs', 'true',
+        '--sourceMap', 'false',
+        '--module', 'CommonJS',
+        '--target', 'ES2017',
+        '--outDir', outDir,
+        '--baseUrl', './',
+        '--esModuleInterop', 'true',
+        '--skipLibCheck', 'true'
+      ]);
 
       console.log(`✅ ${plugin.name} 构建完成`);
     } catch (error) {
-      console.error(`❌ ${plugin.name} 构建失败:`, error);
+      console.error(`❌ ${plugin.name} 构建失败:`, error.message);
     }
   }
 
