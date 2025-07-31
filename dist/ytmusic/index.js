@@ -192,13 +192,13 @@ async function getLyric(musicItem) {
 }
 exports.getLyric = getLyric;
 module.exports = {
-    platform: currentSource.label,
+    platform: "ytmusic",
     author: "欧皇大佬",
     version: "0.1.0",
     supportedSearchType: ["music"],
     primaryKey: ["id", "source"],
     supportedQuality: ["low", "standard", "high", "super"],
-    srcUrl: `https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/${currentSource.value}/index.js`,
+    srcUrl: `https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/ytmusic/index.js`,
     cacheControl: "no-cache",
     search,
     getMediaSource,

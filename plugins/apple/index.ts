@@ -218,13 +218,13 @@ export async function getLyric(musicItem) {
 }
 
 module.exports = {
-  platform: currentSource.label,
+  platform: "apple",
   author: "欧皇大佬",
   version: "0.1.0",
   supportedSearchType: ["music"],
   primaryKey: ["id", "source"], // 添加主键标识
   supportedQuality: ["low", "standard", "high", "super"], // 支持的音质
-  srcUrl: `https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/${currentSource.value}/index.js`,
+  srcUrl: `https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/apple/index.js`,
   cacheControl: "no-cache",
   search,
   getMediaSource,
