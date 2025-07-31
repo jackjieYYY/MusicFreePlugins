@@ -5,7 +5,7 @@
   "main": "dist/plugin.js",
   "scripts": {
     "serve": "http-server .",
-    "build": "tsc & node ./scripts/generate.js",
+    "build": "node ./scripts/easBuild.js & node ./scripts/generate.js",
     "publish": "git checkout master & git merge v0.1 & git push & git checkout v0.1 & git push",
     "test-kugou": "ts-node -T ./plugins/kugou/index.ts",
     "test-navidrome": "ts-node -T ./plugins/navidrome/index.ts",
@@ -42,7 +42,9 @@
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.4",
+    "esbuild": "^0.25.8",
     "form-data": "^4.0.1",
+    "glob": "^11.0.3",
     "he": "^1.2.0",
     "http-server": "^14.1.1",
     "https-proxy-agent": "^7.0.2",

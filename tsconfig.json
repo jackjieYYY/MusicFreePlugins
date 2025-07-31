@@ -12,6 +12,6 @@
   },
   "include": [
     "./types/*",
-    "./plugins/*/index.ts"
-  ]
+    "./plugins/*/index.ts",
+  ],
 }
