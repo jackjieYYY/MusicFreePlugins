@@ -29,7 +29,7 @@ const MusicSourceEnum = {
   APPLE: { value: "apple", label: "Apple" },
 } as const satisfies Record<string, { value: string; label: string }>;
 
-const currentSource = MusicSourceEnum.TENCENT; // 当前使用的音乐源
+const currentSource = MusicSourceEnum.TIDAL; // 当前使用的音乐源
 
 const mediaType = "music"; // 媒体类型
 

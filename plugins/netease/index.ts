@@ -13,21 +13,21 @@ enum BitrateEnum {
 
 // 音乐源枚举
 // netease（默认）、tencent、tidal、spotify、ytmusic、qobuz、joox、deezer、migu、kugou、kuwo、ximalaya、apple
-enum MusicSourceEnum {
-  NETEASE = "netease", // 网易云音乐（默认）
-  TENCENT = "tencent", // 腾讯音乐
-  TIDAL = "tidal", // Tidal
-  SPOTIFY = "spotify", // Spotify
-  YTMUSIC = "ytmusic", // YouTube Music
-  QOBUZ = "qobuz", // Qobuz
-  JOOX = "joox", // JOOX
-  DEEZER = "deezer", // Deezer
-  MIGU = "migu", // 咪咕音乐
-  KUGOU = "kugou", // 酷狗音乐
-  KUWO = "kuwo", // 酷我音乐
-  XIMALAYA = "ximalaya", // 喜马拉雅
-  APPLE = "apple", // Apple Music
-}
+const MusicSourceEnum = {
+  NETEASE: { value: "netease", label: "网易云" },
+  TENCENT: { value: "tencent", label: "腾讯" },
+  TIDAL: { value: "tidal", label: "Tidal" },
+  SPOTIFY: { value: "spotify", label: "Spotify" },
+  YTMUSIC: { value: "ytmusic", label: "YouTube" },
+  QOBUZ: { value: "qobuz", label: "Qobuz" },
+  JOOX: { value: "joox", label: "JOOX" },
+  DEEZER: { value: "deezer", label: "Deezer" },
+  MIGU: { value: "migu", label: "咪咕" },
+  KUGOU: { value: "kugou", label: "酷狗" },
+  KUWO: { value: "kuwo", label: "酷我" },
+  XIMALAYA: { value: "ximalaya", label: "喜马拉雅" },
+  APPLE: { value: "apple", label: "Apple" },
+} as const satisfies Record<string, { value: string; label: string }>;
 
 const currentSource = MusicSourceEnum.NETEASE; // 当前使用的音乐源
 
@@ -83,7 +83,7 @@ async function searchMusicWithSource(query, page, source = "netease") {
 }
 
 async function searchMusic(query, page) {
-  let results = await searchMusicWithSource(query, page, currentSource);
+  let results = await searchMusicWithSource(query, page, currentSource.value);
   return {
     isEnd: results.length < pageSize,
     data: results,
@@ -218,14 +218,13 @@ export async function getLyric(musicItem) {
 }
 
 module.exports = {
-  platform: "网易",
+  platform: currentSource.label,
   author: "欧皇大佬",
   version: "0.1.0",
   supportedSearchType: ["music"],
   primaryKey: ["id", "source"], // 添加主键标识
   supportedQuality: ["low", "standard", "high", "super"], // 支持的音质
-  srcUrl:
-    "https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/netease/index.js",
+  srcUrl: `https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/${currentSource.value}/index.js`,
   cacheControl: "no-cache",
   search,
   getMediaSource,
