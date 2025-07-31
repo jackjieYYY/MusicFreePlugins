@@ -218,14 +218,14 @@ export async function getLyric(musicItem) {
 }
 
 module.exports = {
-  platform: "GDStudio音乐",
+  platform: "网易",
   author: "欧皇大佬",
   version: "0.1.0",
   supportedSearchType: ["music"],
   primaryKey: ["id", "source"], // 添加主键标识
   supportedQuality: ["low", "standard", "high", "super"], // 支持的音质
   srcUrl:
-    "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/gdstudio/index.js",
+    "https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/gdstudio/index.js",
   cacheControl: "no-cache",
   search,
   getMediaSource,

@@ -27,7 +27,7 @@ var MusicSourceEnum;
     MusicSourceEnum["XIMALAYA"] = "ximalaya";
     MusicSourceEnum["APPLE"] = "apple";
 })(MusicSourceEnum || (MusicSourceEnum = {}));
-const currentSource = MusicSourceEnum.NETEASE;
+const currentSource = MusicSourceEnum.TENCENT;
 const mediaType = "music";
 function formatMusicItem(item) {
     return {
@@ -193,13 +193,13 @@ async function getLyric(musicItem) {
 }
 exports.getLyric = getLyric;
 module.exports = {
-    platform: "GDStudio音乐",
+    platform: "网易",
     author: "欧皇大佬",
     version: "0.1.0",
     supportedSearchType: ["music"],
     primaryKey: ["id", "source"],
     supportedQuality: ["low", "standard", "high", "super"],
-    srcUrl: "https://gitee.com/maotoumao/MusicFreePlugins/raw/v0.1/dist/gdstudio/index.js",
+    srcUrl: "https://raw.githubusercontent.com/jackjieYYY/MusicFreePlugins/refs/heads/master/dist/gdstudio/index.js",
     cacheControl: "no-cache",
     search,
     getMediaSource,
